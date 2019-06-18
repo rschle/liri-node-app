@@ -67,15 +67,14 @@ if (command === "concert-this") {
         })
     }
 }
-else if(command === "movie-this"){
+else if (command === "movie-this") {
     var movie = process.argv.slice(3).join("");
-    if(!movie){
+    if (!movie) {
         movie = "Mr. Nobody"
-    } else if (movie){
         var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"
         axios
             .get(queryURL)
-            .then(function(response){
+            .then(function (response) {
                 console.log("Movie Title: " + response.data.Title);
                 console.log("Release Year: " + response.data.Year);
                 console.log("imdb Rating: " + response.data.imdbRating);
@@ -85,7 +84,21 @@ else if(command === "movie-this"){
                 console.log("Plot: " + response.data.Plot);
                 console.log("Actors: " + response.data.Actors);
             })
-    }else if(error){
+    } if (movie) {
+        var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"
+        axios
+            .get(queryURL)
+            .then(function (response) {
+                console.log("Movie Title: " + response.data.Title);
+                console.log("Release Year: " + response.data.Year);
+                console.log("imdb Rating: " + response.data.imdbRating);
+                console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+                console.log("Country: " + response.data.Country);
+                console.log("Language: " + response.data.Language);
+                console.log("Plot: " + response.data.Plot);
+                console.log("Actors: " + response.data.Actors);
+            })
+    } else if (error) {
         console.log("An error has occured.")
     }
 }
