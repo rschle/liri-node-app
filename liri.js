@@ -16,34 +16,59 @@ var command = process.argv[2];
 var query = process.argv[3];
 
 //need to make the commands
-if(command === "concert-this") {
+if (command === "concert-this") {
     var artist = process.argv.slice(3).join("");
     var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
-axios
-    .get(queryURL)
-    .then(function(response){
-    for(var i = 0; i < response.data.length; i++){
-        //venue name
-        console.log("Venue Name: " + response.data[i].venue.name);
-        //location
-        if(response.data[i].venue.region){
-            console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region)
-        }
-        else{
-            console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.country)
-        }
-        console.log("Event Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
-    }
-        // console.log(response.data);
-        
-        // console.log(response.data.venue.city);
-        // console.log(response.data.venue.state);
-        // console.log(moment(response.datetime).format("MM/DD/YYYY"));
-    })
-// }else if(command === "spotify-this"){
+    axios
+        .get(queryURL)
+        .then(function (response) {
+            for (var i = 0; i < response.data.length; i++) {
+                //venue name
+                console.log("Venue Name: " + response.data[i].venue.name);
+                //location
+                if (response.data[i].venue.region) {
+                    console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.region)
+                }
+                else {
+                    console.log("Location: " + response.data[i].venue.city + ", " + response.data[i].venue.country)
+                }
+                console.log("Event Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
+            }
+        })
+} else if (command === "spotify-this") {
+    var song = process.argv.slice(3).join("");
+    var space = "\n" + "\n" + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0";
+    if (!song) {
+        song = "The Sign"
+        spotify.search({ type: 'track', query: song }, function (err, data) {
+            if (err) {
+                console.log("An error has occurred.")
+            } else {
+                console.log("Main Artist: " + data.tracks.items[5].artists[0].name);
+                console.log("Song Name: " + data.tracks.items[5].name);
+                console.log("Preview Link: " + data.tracks.items[5].preview_url);
+                console.log("Album Name: " + data.tracks.items[5].album.name + space)
+            }
+        })
+    } else {
+        spotify.search({ type: 'track', query: song }, function (err, data) {
+            if (err) {
+                console.log("An error has occurred.")
+            } else {
+                for (var i = 0; i < data.tracks.items.length; i++) {
+                    // console.log(data.tracks.items[i]);
+                    console.log("Main Artist: " + data.tracks.items[i].artists[0].name);
+                    console.log("Song Name: " + data.tracks.items[i].name);
+                    console.log("Preview Link: " + data.tracks.items[i].preview_url);
+                    console.log("Album Name: " + data.tracks.items[i].album.name + space);
+                }
 
-// }else if(command === "movie-this"){
+            }
+        })
+    }
+}
+// else if(command === "movie-this"){
 
 // }else if(command === "do-what-it-says"){
 
- }
+//  }
