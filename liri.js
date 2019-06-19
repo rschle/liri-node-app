@@ -35,39 +35,25 @@ if (command === "concert-this") {
                 console.log("Event Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
             }
         })
-} else if (command === "spotify-this") {
+} if (command === "spotify-this") {
     var song = process.argv.slice(3).join("");
     var space = "\n" + "\n" + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0";
     if (!song) {
-        song = "The Sign"
-        spotify.search({ type: 'track', query: song }, function (err, data) {
-            if (err) {
-                console.log("An error has occurred.")
-            } else {
-                console.log("Main Artist: " + data.tracks.items[5].artists[0].name);
-                console.log("Song Name: " + data.tracks.items[5].name);
-                console.log("Preview Link: " + data.tracks.items[5].preview_url);
-                console.log("Album Name: " + data.tracks.items[5].album.name + space)
-            }
-        })
-    } else {
-        spotify.search({ type: 'track', query: song }, function (err, data) {
-            if (err) {
-                console.log("An error has occurred.")
-            } else {
-                for (var i = 0; i < data.tracks.items.length; i++) {
-                    // console.log(data.tracks.items[i]);
-                    console.log("Main Artist: " + data.tracks.items[i].artists[0].name);
-                    console.log("Song Name: " + data.tracks.items[i].name);
-                    console.log("Preview Link: " + data.tracks.items[i].preview_url);
-                    console.log("Album Name: " + data.tracks.items[i].album.name + space);
-                }
-
-            }
-        })
+        song = "The Sign Ace of Base"
     }
+    spotify.search({ type: 'track', query: song }, function (err, data) {
+        if (err) {
+            console.log("An error has occurred.")
+        } else {
+            console.log("Main Artist: " + data.tracks.items[0].artists[0].name);
+            console.log("Song Name: " + data.tracks.items[0].name);
+            console.log("Preview Link: " + data.tracks.items[0].preview_url);
+            console.log("Album Name: " + data.tracks.items[0].album.name + space);
+        }
+
+    })
 }
-else if (command === "movie-this") {
+if (command === "movie-this") {
     var movie = process.argv.slice(3).join("");
     if (!movie) {
         movie = "Mr. Nobody"
@@ -103,6 +89,6 @@ else if (command === "movie-this") {
     }
 }
 
-// }else if(command === "do-what-it-says"){
+// } else if(command === "do-what-it-says"){
 
 //  }
