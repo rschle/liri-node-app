@@ -15,10 +15,12 @@ var spotify = new Spotify(keys.spotify);
 var command = process.argv[2];
 var query = process.argv[3];
 
-//need to make the commands
-if (command === "concert-this") {
-    var artist = process.argv.slice(3).join("");
-    var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp"
+
+//creating functions for each
+
+
+function concertThis(artist) {
+    var queryURL = "https://rest.bandsintown.com/artists/" + artist + "/events?app_id=codingbootcamp";
     axios
         .get(queryURL)
         .then(function (response) {
@@ -35,12 +37,9 @@ if (command === "concert-this") {
                 console.log("Event Date: " + moment(response.data[i].datetime).format("MM/DD/YYYY"));
             }
         })
-} if (command === "spotify-this") {
-    var song = process.argv.slice(3).join("");
-    var space = "\n" + "\n" + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0";
-    if (!song) {
-        song = "The Sign Ace of Base"
-    }
+}
+
+function spotifyThis(song) {
     spotify.search({ type: 'track', query: song }, function (err, data) {
         if (err) {
             console.log("An error has occurred.")
@@ -53,24 +52,9 @@ if (command === "concert-this") {
 
     })
 }
-if (command === "movie-this") {
-    var movie = process.argv.slice(3).join("");
-    if (!movie) {
-        movie = "Mr. Nobody"
-        var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"
-        axios
-            .get(queryURL)
-            .then(function (response) {
-                console.log("Movie Title: " + response.data.Title);
-                console.log("Release Year: " + response.data.Year);
-                console.log("imdb Rating: " + response.data.imdbRating);
-                console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
-                console.log("Country: " + response.data.Country);
-                console.log("Language: " + response.data.Language);
-                console.log("Plot: " + response.data.Plot);
-                console.log("Actors: " + response.data.Actors);
-            })
-    } if (movie) {
+
+function movieThis(movie) {
+    if (movie) {
         var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"
         axios
             .get(queryURL)
@@ -89,6 +73,69 @@ if (command === "movie-this") {
     }
 }
 
-// } else if(command === "do-what-it-says"){
 
-//  }
+//need to make the commands
+if (command === "concert-this") {
+    var artist = process.argv.slice(3).join("");
+    concertThis(artist);
+
+} if (command === "spotify-this") {
+    var song = process.argv.slice(3).join("");
+    var space = "\n" + "\n" + "\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0\xa0";
+    if (!song) {
+        song = "The Sign Ace of Base"
+    }
+    spotifyThis(song);
+}
+if (command === "movie-this") {
+    var movie = process.argv.slice(3).join("");
+    if (!movie) {
+        movie = "Mr. Nobody"
+        var queryURL = "http://www.omdbapi.com/?t=" + movie + "&y=&plot=short&apikey=trilogy"
+        axios
+            .get(queryURL)
+            .then(function (response) {
+                console.log("Movie Title: " + response.data.Title);
+                console.log("Release Year: " + response.data.Year);
+                console.log("imdb Rating: " + response.data.imdbRating);
+                console.log("Rotten Tomatoes Rating: " + response.data.Ratings[1].Value);
+                console.log("Country: " + response.data.Country);
+                console.log("Language: " + response.data.Language);
+                console.log("Plot: " + response.data.Plot);
+                console.log("Actors: " + response.data.Actors);
+            })
+    }
+    movieThis(movie);
+}
+
+if (command === "do-what-it-says") {
+    fs.readFile("./random.txt", "utf8", function (err, data) {
+        var command;
+        var query;
+        if (err) {
+            console.log("An error has occured.");
+        }
+        //seeing if there is a comma in between the command and the query (thing we're searching) 
+        // (index of -1 means not in the array and !== -1 would allow us to see if the comma has an index in the array)
+        // for for this if statement, we recognize the command and query as parts of the array separated by this comma
+        if (data.indexOf(",") !== -1) {
+            var dataArray = data.split(",");
+            command = dataArray[0];
+            query = dataArray[1]
+        } else {
+            command = data;
+        }
+
+        if (command === "concert-this") {
+            concertThis(query);
+        } else if (command === "spotify-this-song") {
+            spotifyThis(query);
+        } else if (command === "movie-this") {
+            movieThis(query);
+        } else {
+            console.log("Command not found.");
+        }
+
+
+    })
+};
